@@ -1,0 +1,12 @@
+:root {
+  --brand-primary: #0D9488;   /* Cartova Teal — 主色/強調色 */
+  --brand-black:   #0F172A;   /* Deep Slate — 深色背景/Header */
+  --text-main:     #1E293B;   /* 主文字 */
+  --text-muted:    #64748B;   /* 次要文字/副標 */
+  --bg-light:      #F0FDFA;   /* 淺色背景（teal tint） */
+  --border:        #E2E8F0;   /* 分隔線/邊框 */
+  --bg-white:      #FFFFFF;   /* 白底 */
+  --font-zh: 'Noto Sans TC', sans-serif;
+  --font-en: 'Inter', sans-serif;
+}
+/* 禁用：純黑 #000000（改用 --brand-black）、任何紅色系做主視覺（保留給錯誤/警示語意） */

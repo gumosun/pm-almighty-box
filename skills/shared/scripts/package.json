@@ -1,0 +1,11 @@
+{
+  "name": "pm-almighty-box-shared-scripts",
+  "private": true,
+  "description": "pm-almighty-box 共用產出工具：HTML 驗證、PDF/PPTX 匯出與影片導出",
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "playwright": "^1.60.0",
+    "pptxgenjs": "^3.12.0",
+    "sharp": "^0.33.0"
+  }
+}

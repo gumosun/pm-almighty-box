@@ -1,0 +1,12 @@
+:root {
+  --brand-primary: #000000;   /* <你的主色> */
+  --brand-black:   #000000;   /* <你的深色/header 色> */
+  --text-main:     #000000;   /* <主文字色> */
+  --text-muted:    #000000;   /* <次要文字色> */
+  --bg-light:      #FFFFFF;   /* <淺色背景> */
+  --border:        #FFFFFF;   /* <邊框色> */
+  --bg-white:      #FFFFFF;   /* <白底色> */
+  --font-zh: '<你的中文字型>', sans-serif;
+  --font-en: '<你的英文字型>', sans-serif;
+}
+/* <在此列出禁用的舊色/衝突色，避免產出物誤用> */

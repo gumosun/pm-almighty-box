@@ -1,0 +1,131 @@
+{
+  "how_to_use": "行為迴歸測試（格式借鏡 huashu-design 的 test-prompts.json）。skill 改版後人工盲測：對裝好 skill 的 Claude 逐條丟 prompt（在 cartova context 或臨時測試 context 上跑），對照 expected 驗收；tests 欄標明該條覆蓋哪些機制。任何一條 fail = 該機制退化，修完 skill 再跑一次。",
+  "cases": [
+    {
+      "id": "assess-1",
+      "skill": "pm-assess",
+      "prompt": "（在 rubric.md 缺檔的 context 上）用 pm-assess 評估：我們該不該做會員積分系統？",
+      "expected": "停下來明確告知缺 rubric.md、問要不要先補上再繼續；不硬跑出一份通用評估",
+      "tests": "缺檔保護 + rubric 是評估的存在理由"
+    },
+    {
+      "id": "assess-2",
+      "skill": "pm-assess",
+      "prompt": "用 pm-assess 評估這三個案子先做哪個（不說是哪間公司）",
+      "expected": "先問是哪間公司、context pack 路徑在哪，不預設任何公司資料夾；確認候選清單完整（問「還有沒有其他候選」）",
+      "tests": "Step 0 問路徑不臆測 + 多案清單完整性確認"
+    },
+    {
+      "id": "assess-3",
+      "skill": "pm-assess",
+      "prompt": "（cartova context）用 pm-assess 評估：首頁改版 vs 會員聊天室，先做哪個？",
+      "expected": "四維度每個判斷都引用 rubric.md 具體判準（如「商業/變現先行」「counter-metric 紀律」）；影響維度講出掛回哪條變現線的因果鏈；排序表之外有「明確不做/延後」清單含觸發重評條件；結尾一句話 recommendation；不吐「都很重要」",
+      "tests": "rubric 引用紀律 + 變現因果鏈 + 明確取捨 + 一句話建議"
+    },
+    {
+      "id": "assess-4",
+      "skill": "pm-assess",
+      "prompt": "（metrics.md 更新時間標注超過一季的 context）用 pm-assess 評估任一提案",
+      "expected": "引用過期指標時標「需要確認現況」不當既定事實；可疑數字（如現況與目標相同）主動標記；全部收斂到「不確定/需驗證」區塊",
+      "tests": "資料敏感度檢查 + 不確定數據收斂呈現"
+    },
+    {
+      "id": "assess-5",
+      "skill": "pm-assess",
+      "prompt": "（完成任一評估後觀察）",
+      "expected": "結尾列「可選後續」但不自動執行任何一項（不自己跑 pm-propose）",
+      "tests": "silo 邊界"
+    },
+    {
+      "id": "propose-1",
+      "skill": "pm-propose",
+      "prompt": "（在 brand-tokens.css 缺檔的 context 上）用 pm-propose 幫功能 X 寫 BRD",
+      "expected": "停下來說 brand-tokens.css 缺檔致命（沒有 CI 依據），問要不要先補；不用猜測的顏色頂替",
+      "tests": "缺檔保護 + CI 依據不可臆測"
+    },
+    {
+      "id": "propose-2",
+      "skill": "pm-propose",
+      "prompt": "（cartova context）用 pm-propose 幫「會員聊天室」寫提案文件",
+      "expected": "BRD 完成後必問「繼續 PRD 還是先停」，不自動一路跑完三段；BRD 的 stakeholder 對照表逐一對應 stakeholders.md 每一方，起草版（⚠️標記）的判斷更保守",
+      "tests": "段落間檢查點真的等 + stakeholder 對照非模板"
+    },
+    {
+      "id": "propose-3",
+      "skill": "pm-propose",
+      "prompt": "（任一份 HTML 產出後觀察）",
+      "expected": "做顏色自審（全部 hex 可溯源到 tokens）；跑 shared/scripts/verify.py 且 page errors=0；用 Read 看截圖並能回答 html-craft.md 第 9 節四題（視覺決定來自內容哪裡/密度對比/accent 位置/120% 細節）；交付訊息附驗證結果；無 playwright 時明講未驗證，不假裝",
+      "tests": "顏色自審 + 驗證迴路 + craft 四題自檢 + 誠實降級"
+    },
+    {
+      "id": "propose-4",
+      "skill": "pm-propose",
+      "prompt": "（觀察 PRD 段落產出）",
+      "expected": "產雙版本且寫法不同：md 版更密、邊界條件盡量窮舉、驗收標準全 checklist；資訊不足處標「⚠️ 待確認：[具體問題]」而不是編一個合理答案；B3 一致性檢查發現與 BRD 不一致時標注而非默默改",
+      "tests": "雙版本差異化 + 不編造 + BRD/PRD 一致性檢查"
+    },
+    {
+      "id": "propose-5",
+      "skill": "pm-propose",
+      "prompt": "（觀察 report 段落產出）",
+      "expected": "先問受眾；版面重心從這次內容長出來，交付訊息寫「視覺重心是 X，因為這次的核心是 Y」；結尾問「需不需要 PDF 版」，要的話用 shared/scripts/html2pdf.mjs 匯出；對方要可編輯 PPTX 時明講單頁 report 不適用、需另排 deck",
+      "tests": "受眾客製 + 視覺母題自檢 + PDF 匯出 + PPTX 邊界誠實"
+    },
+    {
+      "id": "prototype-1",
+      "skill": "pm-prototype",
+      "prompt": "用 pm-prototype 做一個 7 個畫面的「創作者收益後台」prototype",
+      "expected": "Step 1 先對畫面清單；畫面 ≥5 → 建議平鋪 overview 形態並跟對方確認；收益後台屬高密度型 → 每屏 ≥3 處有內容的差異化資訊（收益數字、趨勢、分成狀態等），示意值明確標注不假裝真數據",
+      "tests": "呈現形態路由 + 密度分型 + 誠實示意值"
+    },
+    {
+      "id": "prototype-2",
+      "skill": "pm-prototype",
+      "prompt": "用 pm-prototype 做一個簡單的「修改暱稱」流程 prototype",
+      "expected": "克制型密度（每屏聚焦一件事，不塞裝飾）；預設 mobile 375px 逐屏點擊；產出單一自包含 HTML、不外連任何 CDN/字型；全部 hex 可溯源到 brand-tokens.css",
+      "tests": "克制型不過度設計 + 自包含鐵律 + CI 溯源"
+    },
+    {
+      "id": "prototype-3",
+      "skill": "pm-prototype",
+      "prompt": "（任一 prototype 產出後觀察）",
+      "expected": "跑 shared/scripts/verify.py：page errors=0、用 Read 看截圖肉眼檢查（無破版、無大片死白＋內容擠角落）；交付附驗證結果；提醒對方實際點一遍 navigate 流程；無 playwright 時明講未驗證",
+      "tests": "驗證迴路 + 構圖底線 + 誠實降級"
+    },
+    {
+      "id": "prototype-4",
+      "skill": "pm-prototype",
+      "prompt": "（完成後觀察）",
+      "expected": "問「調整還是先停」，不主動建議跑 pm-propose 或其他 skill",
+      "tests": "silo 邊界"
+    },
+    {
+      "id": "demo-1",
+      "skill": "pm-demo",
+      "prompt": "用 pm-demo 幫「創作者訂閱牆」做一支 30 秒 demo（提供 pm-prototype 的 HTML）",
+      "expected": "先確認素材/受眾/時長；用 Playwright 對 prototype 逐屏截圖當素材；動手寫 code 前先列時間軸表（幾秒到幾秒演什麼）跟對方對齊；開場與收尾是套 CI 的 title card",
+      "tests": "素材擷取 + 時間軸先行 + title card 簽名"
+    },
+    {
+      "id": "demo-2",
+      "skill": "pm-demo",
+      "prompt": "（觀察動畫 HTML 產出）",
+      "expected": "用 shared/assets/animations.jsx 的 Stage/Sprite，不手寫播放器；CDN 只有 pinned 的 React/Babel 三行（含 integrity）；MP4 畫面內顏色全部可溯源到 brand-tokens；入場 easeOut/expoOut、出場 easeIn；每段文字停留 ≥3 秒",
+      "tests": "引擎硬綁定 + CDN 例外條款邊界 + CI 溯源 + easing/節奏紀律"
+    },
+    {
+      "id": "demo-3",
+      "skill": "pm-demo",
+      "prompt": "（觀察導出流程）",
+      "expected": "先 verify.py 驗 HTML（console 乾淨）→ render-video.js 出 MP4 → ffmpeg 抽開場/中段/收尾幀用 Read 肉眼審 → ffprobe 確認時長解析度；素材模糊或缺畫面時停下來要素材，不硬做",
+      "tests": "驗證迴路（對影片）+ 素材品質門檻"
+    },
+    {
+      "id": "demo-4",
+      "skill": "pm-demo",
+      "prompt": "可以幫這支 demo 配個背景音樂嗎？",
+      "expected": "明講音訊不在本 skill 範圍（無聲是刻意的定位），不硬做也不靜默忽略；環境缺 ffmpeg/playwright 時交付 demo.html 並附依賴安裝指引",
+      "tests": "範圍邊界誠實 + 環境降級"
+    }
+  ]
+}
