@@ -96,4 +96,4 @@ craft 方法論與工具鏈蒸餾自 [huashu-design](https://github.com/alchainc
 
 ## License
 
-[MIT](LICENSE)——內含的 huashu-design 工具鏈保留其 MIT attribution。
+[MIT](LICENSE)。搬運/改寫自 huashu-design 的工具鏈檔案保留其 MIT attribution——完整清單與原始授權全文見 [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)。

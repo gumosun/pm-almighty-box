@@ -96,4 +96,4 @@ That's the whole point: change companies, keep the arsenal.
 
 ## License
 
-[MIT](LICENSE) — bundled toolchain from huashu-design retains its MIT attribution.
+[MIT](LICENSE). Vendored/adapted toolchain files from huashu-design retain their MIT attribution — see [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for the full inventory and original license text.
