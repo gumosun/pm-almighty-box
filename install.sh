@@ -2,7 +2,7 @@
 # pm-almighty-box installer.
 #
 # 用法：
-#   ./install.sh --user                     # 把三個 skill 裝到 ${PMBOX_CLAUDE_DIR:-$HOME/.claude}/skills/
+#   ./install.sh --user                     # 把六個 skill 裝到 ${PMBOX_CLAUDE_DIR:-$HOME/.claude}/skills/
 #   ./install.sh --user --force              # 連本地改過的檔也覆蓋
 #   ./install.sh --seed-context <path>       # 把 templates/* 鋪進 <path>（已存在不覆蓋）
 #
@@ -77,7 +77,7 @@ copy_skills() {
     fi
   done < <(find "$BOX_DIR/skills" -type f ! -path '*/node_modules/*' ! -name 'package-lock.json' ! -name '.DS_Store' | sort)
   mv "$new_manifest" "$manifest"
-  echo "  ✓ skills → $claude_dir/skills/（pm-assess / pm-propose / pm-prototype / pm-demo ＋ shared/ 工藝守則與 scripts）"
+  echo "  ✓ skills → $claude_dir/skills/（pm-assess / pm-propose / pm-prototype / pm-demo / pm-recap / pm-weekly ＋ shared/ 工藝守則與 scripts）"
 }
 
 seed_context() {
@@ -102,7 +102,7 @@ case "$MODE" in
     echo "→ 安裝到 $claude_dir"
     copy_skills "$claude_dir"
     echo ""
-    echo "完成。/pm-assess、/pm-propose、/pm-prototype、/pm-demo 現在可用。"
+    echo "完成。/pm-assess、/pm-propose、/pm-prototype、/pm-demo、/pm-recap、/pm-weekly 現在可用。"
     ;;
   seed)
     echo "→ 鋪脈絡骨架到：$SEED_TARGET"

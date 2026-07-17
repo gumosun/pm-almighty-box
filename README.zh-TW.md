@@ -6,7 +6,7 @@
 
 ---
 
-## 四個 skill
+## 六個 skill
 
 | 柱 | Skill | 吃進 | 吐出 |
 |---|---|---|---|
@@ -14,8 +14,10 @@
 | **提案文件組** | `pm-propose` | 已決定的 initiative ＋ context pack | BRD→PRD 雙版本（人讀 HTML ＋ AI 開發用 md）＋可簡報的 HTML report——全套公司 CI |
 | **Prototype 產生器** | `pm-prototype` | 一個功能／流程描述＋ brand tokens | demo 級可交互 HTML prototype——平鋪主屏、每台可點可切（換頁／modal／開關）、精確手機外框、套公司 CI；另有 wireframe 快速模式 |
 | **Demo 影片產生器** | `pm-demo` | prototype HTML 或畫面截圖＋ brand tokens | 30–60 秒套 CI 的 MP4 demo 動畫（可選 GIF）——比靜態 prototype 更有說服力 |
+| **會議收斂器** | `pm-recap` | 一份會議紀錄（逐字稿或雜記）＋ context pack（stakeholders／product／decisions） | 結構化 recap（決議／行動項／未決事項／stakeholder 知會提醒），決議經逐筆確認後回寫進 `decisions.md` |
+| **週報產生器** | `pm-weekly` | 手打的 done/doing/blocked bullets＋ context pack（自動掃本週足跡補漏） | 對受眾客製、可直接貼訊息的週報——預設純文字，可選套 CI 的 HTML 正式版 |
 
-四個 skill 刻意做成**獨立 silo**、不串成管線——PM 的日常是隨叫隨用的任務，不是固定產線。
+六個 skill 刻意做成**獨立 silo**、不串成管線——PM 的日常是隨叫隨用的任務，不是固定產線。
 
 ## 產出長什麼樣
 
@@ -30,12 +32,12 @@
 ```
 pm-almighty-box/
 ├── skills/            ← 引擎：通用邏輯，跨公司共用
-│   ├── pm-assess/  pm-propose/  pm-prototype/  pm-demo/
+│   ├── pm-assess/  pm-propose/  pm-prototype/  pm-demo/  pm-recap/  pm-weekly/
 │   └── shared/        工藝守則（HTML＋demo 級 prototype）、變體/評審機制、
 │                      手機外框資產、驗證/匯出工具鏈
 ├── contexts/
 │   └── cartova/       ← Context pack：每公司一份（內含示範包）
-├── templates/         空白 context pack 骨架（7 份檔案）
+├── templates/         空白 context pack 骨架（8 份檔案）
 └── install.sh         安裝＋ hash-manifest 升級保護
 ```
 
@@ -43,7 +45,7 @@ pm-almighty-box/
 
 ## 示範 context pack：Cartova
 
-`contexts/cartova/` 是一間**完全虛構**的示範公司——中型生活選物電商，策略核心是 CRM 與客戶生命週期管理（從買流量轉向留客：生命週期旅程、會員分級、訂閱回購）。七份檔案全數填實，clone 下來立刻可以跑通每個 skill：
+`contexts/cartova/` 是一間**完全虛構**的示範公司——中型生活選物電商，策略核心是 CRM 與客戶生命週期管理（從買流量轉向留客：生命週期旅程、會員分級、訂閱回購）。八份檔案全數填實，clone 下來立刻可以跑通每個 skill。其中 `decisions.md` 內建幾筆示範決議（會員分級門檻的計算基礎、生命週期旅程推播頻率上限），`pm-assess` 評估時會讀取對照；`pm-recap` 會在每次會議收斂後繼續往裡面 append（例如「用 pm-recap 整理這份會議紀錄」）。
 
 ```
 用 pm-assess 評估：會員分級制度 vs 沉睡喚醒旅程，先做哪個？
@@ -88,8 +90,8 @@ craft 方法論與工具鏈蒸餾自 [huashu-design](https://github.com/alchainc
 
 ## 到新公司怎麼用
 
-1. `./install.sh --user`——四個 skill（＋shared 工具層）進 `~/.claude/skills/`
-2. `./install.sh --seed-context contexts/<company>`——鋪出七份骨架檔案
+1. `./install.sh --user`——六個 skill（＋shared 工具層）進 `~/.claude/skills/`
+2. `./install.sh --seed-context contexts/<company>`——鋪出八份骨架檔案（含空白 `decisions.md`——不用先填，由 `pm-recap` 隨使用累積）
 3. 填入該公司的策略／數據／產品／組織／品牌 CI——尤其是 **`rubric.md`**（你的判斷層）。「填得好長什麼樣」參考 `contexts/cartova/`。
 
 這就是整個工具的重點：**換公司，軍火庫帶著走。**

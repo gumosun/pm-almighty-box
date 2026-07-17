@@ -154,6 +154,48 @@
       "prompt": "可以幫這支 demo 配個背景音樂嗎？",
       "expected": "明講音訊不在本 skill 範圍（無聲是刻意的定位），不硬做也不靜默忽略；環境缺 ffmpeg/playwright 時交付 demo.html 並附依賴安裝指引",
       "tests": "範圍邊界誠實 + 環境降級"
+    },
+    {
+      "id": "recap-1",
+      "skill": "pm-recap",
+      "prompt": "（丟一段含口語贅字、多人交錯、中途跳題的會議逐字稿）用 pm-recap 整理這場會",
+      "expected": "判斷為逐字稿走降噪收斂；發言歸屬不確定標「（歸屬不確定）」不猜人；產出五區塊（決議/行動項/未決/stakeholder 提醒/沒共識段落）；跳題未收的議題進未決事項；「那就這樣吧」後無人回應的段落被抓進「沒共識但被當共識」",
+      "tests": "輸入形態判斷 + 歸屬不腦補 + 五區塊結構 + 沒共識偵測"
+    },
+    {
+      "id": "recap-2",
+      "skill": "pm-recap",
+      "prompt": "（丟一份半結構化、多條沒寫結論的會議雜記）用 pm-recap 整理",
+      "expected": "判斷為雜記走補全模式；缺結論條目收成「這幾條當時有結論嗎？」清單一次問；使用者答不記得的標「⚠️ 會中未定」；行動項缺 owner/日期同樣標注不編",
+      "tests": "補全模式 + 一次性反問 + 缺漏誠實標注"
+    },
+    {
+      "id": "recap-3",
+      "skill": "pm-recap",
+      "prompt": "（觀察 recap 完成後的決議沉澱段）",
+      "expected": "候選決議只含產品/策略性決定（執行性安排不入列）；逐筆確認才 append 進 decisions.md；新條目在清單頂部、格式符合 templates/decisions.md；推翻舊決議時舊條目加「⛔ 被取代」行而不刪改；一筆都不選也正常結束不推銷",
+      "tests": "回寫確認機制 + 格式一致 + 取代標記 + 零筆正常"
+    },
+    {
+      "id": "weekly-1",
+      "skill": "pm-weekly",
+      "prompt": "（context 的 outputs/ 與 decisions.md 有本週足跡）用 pm-weekly 產週報，給幾條 done/doing/blocked bullets",
+      "expected": "先確認區間與受眾；列「本週足跡——這些你沒寫，要納入嗎」讓使用者勾選，不擅自寫入；產出開頭一句話講本週最重要的事；blocked 區明講需要收件人做什麼決定；數字只來自 metrics.md 或 bullets",
+      "tests": "足跡提醒不擅寫 + 結論先行 + blocked 有 ask + 數字紀律"
+    },
+    {
+      "id": "weekly-2",
+      "skill": "pm-weekly",
+      "prompt": "（在 stakeholders.md 缺檔的 context 上）用 pm-weekly 產週報",
+      "expected": "明講受眾客製會退化，問要先補上還是接受限制續跑；不硬跑出一份通用週報當沒事",
+      "tests": "缺檔保護（累積型與必讀檔的分級處理）"
+    },
+    {
+      "id": "assess-6",
+      "skill": "pm-assess",
+      "prompt": "（context 的 decisions.md 有一條與新提案方向相反的既有決議）用 pm-assess 評估該新提案",
+      "expected": "Step 0 讀到 decisions.md；戰略契合維度明講「這與 <日期> 決議『<標題>』衝突，等於要推翻它」並引用條目內容；不默默評下去；若結論支持推翻，提醒把新決議沉澱回 decisions.md",
+      "tests": "decisions.md 飛輪消費端 + 衝突偵測 + 沉澱提醒"
     }
   ]
 }

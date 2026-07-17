@@ -22,10 +22,12 @@ contexts/<company>/strategy.md
 contexts/<company>/metrics.md
 contexts/<company>/product.md
 contexts/<company>/rubric.md
+contexts/<company>/decisions.md   ← 若存在才讀；缺檔不停不問
 ```
 
 - 如果不知道是哪間公司或路徑，**先問 使用者**：「這次要評估的是哪間公司？脈絡包路徑是？」不要預設用某個特定公司資料夾。
 - 四份檔案中若有缺檔，尤其是 `rubric.md`——**停下來告知 使用者 缺哪份，問要不要先補上再繼續**。沒有 `rubric.md` 硬跑，產出的只會是通用 AI 建議，失去這個工具存在的意義。
+- `decisions.md` 是累積型檔案（由 `pm-recap` 沉澱決議），新公司沒有很正常——存在就讀、評估時引用既有決議；缺檔直接續跑，處理等級與 rubric.md 缺檔不同。
 - 讀完後不需要跟 使用者 複誦四份檔案的全部內容，但評估過程中要能隨時引用其中具體段落（策略賭注、優先序表、指標數字、判準句）。
 
 ## Step 1 — 確認輸入
@@ -65,6 +67,7 @@ contexts/<company>/rubric.md
 ### 戰略契合（對照 strategy.md）
 - 這件事跟 `strategy.md` 現有的策略賭注、優先序表、「已決定不做的事」是一致、衝突、還是無關？
 - 引用 `strategy.md` 的具體段落做對照，不要只講「符合公司方向」這種空話。
+- 對照 `decisions.md`（若有）：這個案子與既有決議一致、衝突、還是會推翻哪一條？衝突時明講「這與 <日期> 決議『<標題>』衝突，等於要推翻它」，不默默評下去；若評估結論就是該推翻，提醒使用者事後把新決議沉澱回 `decisions.md`（透過 pm-recap 或手動）。
 
 ### 風險
 - **Counter-metric 紀律**（rubric）：這個賭注如果成功了，會有什麼指標反向惡化？必須明講至少一個可能被犧牲的指標與監控方式，不能只講正向效果。

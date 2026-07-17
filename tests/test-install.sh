@@ -6,7 +6,7 @@ export PMBOX_CLAUDE_DIR="$TMP/claude"
 
 # 測 1：--user 裝入三個 skill ＋ shared 層
 bash "$ROOT/install.sh" --user
-for s in pm-assess pm-propose pm-prototype pm-demo; do
+for s in pm-assess pm-propose pm-prototype pm-demo pm-recap pm-weekly; do
   test -f "$PMBOX_CLAUDE_DIR/skills/$s/SKILL.md" || { echo "FAIL: $s 未安裝"; exit 1; }
 done
 test -f "$PMBOX_CLAUDE_DIR/.pmbox-manifest" || { echo "FAIL: 無 manifest"; exit 1; }
@@ -23,6 +23,6 @@ grep -q "LOCAL EDIT" "$PMBOX_CLAUDE_DIR/skills/pm-assess/SKILL.md" || { echo "FA
 # 測 3：--seed-context 鋪骨架
 SEED="$TMP/newco"; mkdir -p "$SEED"
 bash "$ROOT/install.sh" --seed-context "$SEED"
-test -f "$SEED/rubric.md" && test -f "$SEED/brand-tokens.css" || { echo "FAIL: seed 不全"; exit 1; }
+test -f "$SEED/rubric.md" && test -f "$SEED/brand-tokens.css" && test -f "$SEED/decisions.md" || { echo "FAIL: seed 不全"; exit 1; }
 
 echo "ALL PASS"

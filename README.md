@@ -6,7 +6,7 @@
 
 ---
 
-## The four skills
+## The six skills
 
 | Pillar | Skill | Eats | Produces |
 |---|---|---|---|
@@ -14,8 +14,10 @@
 | **Proposal doc suite** | `pm-propose` | A decided initiative + context pack | BRD → PRD in two flavors (human-readable HTML + AI-dev markdown) + a presentable HTML report — all in company CI |
 | **Prototype generator** | `pm-prototype` | A feature/flow description + brand tokens | Demo-grade interactive HTML prototype — tiled main screens, every device fully clickable (navigate / modals / toggles), precise phone frame, company CI; plus a quick wireframe mode |
 | **Demo video generator** | `pm-demo` | A prototype HTML or screenshots + brand tokens | 30–60s branded MP4 demo animation (optional GIF) — more persuasive than a static prototype |
+| **Meeting condenser** | `pm-recap` | A meeting record (transcript or raw notes) + context pack (stakeholders / product / decisions) | Structured recap (decisions / action items / open questions / stakeholder heads-up flags) with per-item confirmed decision write-back to `decisions.md` |
+| **Status update generator** | `pm-weekly` | Hand-typed done/doing/blocked bullets + context pack (auto pack-footprint scan) | Audience-tailored, paste-ready status update — plain text by default, with an optional CI-branded HTML version |
 
-The four skills are deliberately **silos**, not a pipeline — a PM's day is ad-hoc tasks on demand, not a fixed assembly line.
+The six skills are deliberately **silos**, not a pipeline — a PM's day is ad-hoc tasks on demand, not a fixed assembly line.
 
 ## What the output looks like
 
@@ -30,12 +32,12 @@ Click through it yourself: [`examples/cartova-member-tier-prototype.html`](examp
 ```
 pm-almighty-box/
 ├── skills/            ← ENGINE: generic logic, shared across companies
-│   ├── pm-assess/  pm-propose/  pm-prototype/  pm-demo/
+│   ├── pm-assess/  pm-propose/  pm-prototype/  pm-demo/  pm-recap/  pm-weekly/
 │   └── shared/        craft rules (HTML + demo-grade prototype), variations &
 │                      critique playbooks, phone-frame asset, verify/export toolchain
 ├── contexts/
 │   └── cartova/       ← CONTEXT PACK: one per company (demo pack included)
-├── templates/         blank context-pack skeleton (7 files)
+├── templates/         blank context-pack skeleton (8 files)
 └── install.sh         install + hash-manifest upgrade protection
 ```
 
@@ -43,7 +45,7 @@ The moat lives in the **context pack** — especially `rubric.md`, where you wri
 
 ## Demo context pack: Cartova
 
-`contexts/cartova/` is a complete, **fully fictional** demo company — a mid-size curated-lifestyle e-commerce whose strategy centers on CRM and customer lifecycle management (winning the shift from paid acquisition to retention: lifecycle journeys, membership tiers, subscribe & save). All seven files are filled in, so you can clone this repo and exercise every skill immediately:
+`contexts/cartova/` is a complete, **fully fictional** demo company — a mid-size curated-lifestyle e-commerce whose strategy centers on CRM and customer lifecycle management (winning the shift from paid acquisition to retention: lifecycle journeys, membership tiers, subscribe & save). All eight files are filled in, so you can clone this repo and exercise every skill immediately. That includes `decisions.md` — a small seeded decision log (membership-tier basis, lifecycle-journey push caps) that `pm-assess` reads and cross-checks, and that `pm-recap` keeps appending to after each meeting (e.g. *"用 pm-recap 整理這份會議紀錄"*).
 
 ```
 用 pm-assess 評估：會員分級制度 vs 沉睡喚醒旅程，先做哪個？
@@ -88,8 +90,8 @@ Craft methodology and toolchain are distilled from [huashu-design](https://githu
 
 ## Onboarding a new company
 
-1. `./install.sh --user` — the four skills (+ shared toolchain) land in `~/.claude/skills/`
-2. `./install.sh --seed-context contexts/<company>` — lays down the 7-file skeleton
+1. `./install.sh --user` — the six skills (+ shared toolchain) land in `~/.claude/skills/`
+2. `./install.sh --seed-context contexts/<company>` — lays down the 8-file skeleton (including a blank `decisions.md` — it doesn't need to be pre-filled; `pm-recap` accumulates it as you use it)
 3. Fill in strategy / metrics / product / stakeholders / brand CI — and above all **`rubric.md`**, your judgment layer. Use `contexts/cartova/` as the reference for what "filled in well" looks like.
 
 That's the whole point: change companies, keep the arsenal.
