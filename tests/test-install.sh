@@ -4,7 +4,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 export PMBOX_CLAUDE_DIR="$TMP/claude"
 
-# 測 1：--user 裝入三個 skill ＋ shared 層
+# 測 1：--user 裝入六個 skill ＋ shared 層
 bash "$ROOT/install.sh" --user
 for s in pm-assess pm-propose pm-prototype pm-demo pm-recap pm-weekly; do
   test -f "$PMBOX_CLAUDE_DIR/skills/$s/SKILL.md" || { echo "FAIL: $s 未安裝"; exit 1; }

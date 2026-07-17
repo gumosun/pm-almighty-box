@@ -15,7 +15,7 @@ silo skill：只做評估，不自動接下一步（例如不自動呼叫 `pm-pr
 
 ## Step 0 — 讀取脈絡包
 
-在做任何評估之前，先讀這四份檔案：
+在做任何評估之前，先讀脈絡包（前四份必讀，`decisions.md` 選讀）：
 
 ```
 contexts/<company>/strategy.md
