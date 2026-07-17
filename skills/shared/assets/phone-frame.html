@@ -1,0 +1,174 @@
+<!--
+  phone-frame.html — vanilla 手機外框參考實作（iPhone 15 Pro 規格）
+
+  移植自 huashu-design 的 assets/ios_frame.jsx（alchaincyf，MIT License），
+  改為純 HTML/CSS，無 React/Babel 依賴——維持 pm-almighty-box 的自包含鐵律
+  （產出 HTML 不外連任何資源，雙擊即開）。
+
+  為什麼不能自己手寫外框：Dynamic Island 是固定 124×36、top 12 置中，
+  status bar 兩側的可用空間很窄，content 區的 top padding 也要精確避讓——
+  自己估 99% 會撞位置 bug（時間/電池被島擠壓、第一行內容蓋在島下）。
+
+  用法（三步）：
+  1. 把下方 <style> 裡整段 .pf-* 規則複製進你的 prototype HTML
+  2. 把 <div class="pf-wrapper"> 的整段骨架複製過去，
+     你的畫面內容放進 .pf-content 裡（從 top 54 開始渲染，底部避讓已處理，不用管）
+  3. 不要動 island / status bar / home indicator 的任何尺寸與定位
+
+  變體：
+  - 深色畫面：在 .pf-screen 加 class="pf-screen pf-dark"
+  - 電池電量：改 .pf-battery-fill 的 width（百分比）
+  - 平鋪多台：外層容器 display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start
+    （393×852 對平鋪偏大時，可在每台外再包一層 transform: scale(0.8); transform-origin: top left
+     的容器縮放整台，不要改 frame 內部任何尺寸）
+-->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>phone-frame — vanilla 手機外框參考實作</title>
+<style>
+  /* ===== 從這裡開始複製 .pf-* 規則 ===== */
+  .pf-wrapper {
+    display: inline-block;
+    padding: 12px;
+    background: #000;
+    border-radius: 60px;
+    box-shadow: 0 0 0 2px #1f2937, 0 20px 60px rgba(0,0,0,0.3);
+    position: relative;
+  }
+  .pf-screen {
+    position: relative;
+    width: 393px;
+    height: 852px;
+    border-radius: 48px;
+    overflow: hidden;
+    background: #fff;
+    color: #000;
+  }
+  .pf-screen.pf-dark { background: #000; color: #fff; }
+  .pf-statusbar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: -apple-system, "SF Pro Text", "PingFang TC", sans-serif;
+    z-index: 20;
+    pointer-events: none;
+  }
+  .pf-island {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 124px;
+    height: 36px;
+    background: #000;
+    border-radius: 999px;
+    z-index: 30;
+  }
+  .pf-status-icons { display: flex; align-items: center; gap: 6px; }
+  .pf-signal { display: flex; align-items: flex-end; gap: 2px; height: 12px; }
+  .pf-signal span { width: 3px; background: currentColor; border-radius: 1px; display: block; }
+  .pf-battery {
+    width: 26px; height: 12px;
+    border: 1.5px solid currentColor;
+    border-radius: 3px;
+    padding: 1px;
+    position: relative;
+    opacity: 0.8;
+    box-sizing: content-box;
+  }
+  .pf-battery-fill { height: 100%; background: currentColor; border-radius: 1px; opacity: 0.9; }
+  .pf-battery-cap {
+    position: absolute;
+    top: 3px; right: -3px;
+    width: 2px; height: 6px;
+    background: currentColor;
+    border-radius: 0 1px 1px 0;
+  }
+  .pf-content {
+    position: absolute;
+    top: 54px; left: 0; right: 0; bottom: 34px;
+    overflow: auto;
+  }
+  .pf-home {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px; height: 5px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 999px;
+    z-index: 10;
+  }
+  .pf-screen.pf-dark .pf-home { background: rgba(255,255,255,0.5); }
+  /* ===== 複製到這裡結束 ===== */
+
+  /* 以下僅供本檔預覽用，不用複製 */
+  body { margin: 0; padding: 48px; background: #e8e6e1; font-family: -apple-system, "PingFang TC", sans-serif; display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start; }
+  .demo-note { width: 100%; max-width: 640px; font-size: 14px; line-height: 1.7; color: #444; }
+  .demo-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 8px; color: #999; font-size: 14px; }
+  .demo-placeholder strong { color: #333; font-size: 17px; }
+</style>
+</head>
+<body>
+<p class="demo-note">
+  這是 <code>phone-frame</code> 的可預覽參考實作。雙擊開啟看到的兩台 iPhone
+  外殼（亮/暗）即為複製後的效果；實際使用時把 <code>.pf-*</code> 樣式與下方骨架
+  複製進 prototype HTML，畫面內容放進 <code>.pf-content</code>。
+</p>
+
+<!-- ===== 從這裡開始複製骨架（一台的量） ===== -->
+<div class="pf-wrapper">
+  <div class="pf-screen">
+    <div class="pf-statusbar">
+      <span>9:41</span>
+      <div class="pf-status-icons">
+        <div class="pf-signal"><span style="height:4px"></span><span style="height:6px"></span><span style="height:9px"></span><span style="height:11px"></span></div>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+          <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+          <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+          <path d="M1 4.5a11 11 0 0114 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.7"/>
+        </svg>
+        <div class="pf-battery"><div class="pf-battery-fill" style="width:85%"></div><div class="pf-battery-cap"></div></div>
+      </div>
+    </div>
+    <div class="pf-island"></div>
+    <div class="pf-content">
+      <!-- 你的畫面內容放這裡（top 從 0 開始即可，54px 避讓已由容器處理） -->
+      <div class="demo-placeholder"><strong>你的畫面內容</strong><span>.pf-content 內部，393×764 可用</span></div>
+    </div>
+    <div class="pf-home"></div>
+  </div>
+</div>
+<!-- ===== 骨架複製到這裡結束 ===== -->
+
+<div class="pf-wrapper">
+  <div class="pf-screen pf-dark">
+    <div class="pf-statusbar">
+      <span>9:41</span>
+      <div class="pf-status-icons">
+        <div class="pf-signal"><span style="height:4px"></span><span style="height:6px"></span><span style="height:9px"></span><span style="height:11px"></span></div>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+          <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+          <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+          <path d="M1 4.5a11 11 0 0114 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.7"/>
+        </svg>
+        <div class="pf-battery"><div class="pf-battery-fill" style="width:85%"></div><div class="pf-battery-cap"></div></div>
+      </div>
+    </div>
+    <div class="pf-island"></div>
+    <div class="pf-content">
+      <div class="demo-placeholder"><strong style="color:#eee">深色畫面變體</strong><span>pf-screen pf-dark</span></div>
+    </div>
+    <div class="pf-home"></div>
+  </div>
+</div>
+</body>
+</html>

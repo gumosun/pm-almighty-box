@@ -12,7 +12,7 @@
 |---|---|---|---|
 | **決策評估** | `pm-assess` | 一個提案（或多個競爭 initiative）＋ context pack（策略／數據／rubric） | 結構化評估（影響／成本／戰略契合／風險）＋排序建議＋技術方案選項標註＋一句話 recommendation |
 | **提案文件組** | `pm-propose` | 已決定的 initiative ＋ context pack | BRD→PRD 雙版本（人讀 HTML ＋ AI 開發用 md）＋可簡報的 HTML report——全套公司 CI |
-| **Prototype 產生器** | `pm-prototype` | 一個功能／流程描述＋ brand tokens | 可在瀏覽器點擊的 HTML wireframe，mobile frame 為主，套公司 CI |
+| **Prototype 產生器** | `pm-prototype` | 一個功能／流程描述＋ brand tokens | demo 級可交互 HTML prototype——平鋪主屏、每台可點可切（換頁／modal／開關）、精確手機外框、套公司 CI；另有 wireframe 快速模式 |
 | **Demo 影片產生器** | `pm-demo` | prototype HTML 或畫面截圖＋ brand tokens | 30–60 秒套 CI 的 MP4 demo 動畫（可選 GIF）——比靜態 prototype 更有說服力 |
 
 四個 skill 刻意做成**獨立 silo**、不串成管線——PM 的日常是隨叫隨用的任務，不是固定產線。
@@ -31,7 +31,8 @@
 pm-almighty-box/
 ├── skills/            ← 引擎：通用邏輯，跨公司共用
 │   ├── pm-assess/  pm-propose/  pm-prototype/  pm-demo/
-│   └── shared/        HTML 工藝守則＋驗證/匯出工具鏈
+│   └── shared/        工藝守則（HTML＋demo 級 prototype）、變體/評審機制、
+│                      手機外框資產、驗證/匯出工具鏈
 ├── contexts/
 │   └── cartova/       ← Context pack：每公司一份（內含示範包）
 ├── templates/         空白 context pack 骨架（7 份檔案）
@@ -63,10 +64,13 @@ pm-almighty-box/
 
 ## 產出品質關卡
 
-HTML 產出除了 CI 嚴格模式，另有三道關卡：
+HTML 產出除了 CI 嚴格模式，另有這些關卡：
 
-- **工藝守則**（`skills/shared/html-craft.md`）：字重層次、空間三數量級、單一 accent 紀律、反 AI slop 黑名單、可證偽的 craft 自檢四題——把版面下限從「AI 平均值」抬到「有人設計過」。
+- **工藝守則**（`skills/shared/html-craft.md`）：字重層次、空間三數量級、單一 accent 紀律、反 AI slop 黑名單、品位錨點、可證偽的 craft 自檢四題——把版面下限從「AI 平均值」抬到「有人設計過」。
+- **Demo 級 prototype 守則**（`skills/shared/prototype-craft.md`）：平鋪主屏＋每台是 vanilla 迷你狀態機（不引 React/CDN，仍是單一自包含檔）、精確手機外框（`assets/phone-frame.html`，vanilla 移植）、真圖誠實性測試、交付前 3 項點擊測試。
 - **驗證迴路**（`skills/shared/scripts/verify.py`）：每份 HTML 交付前 Playwright 渲染＋截圖＋抓 console error；沒驗證就明講，不假裝。
+- **設計方向顧問／變體**（`skills/shared/variations.md`）：方向模糊或想比較時，三版布局骨架互異的真實視覺並排讓你選——顏色仍鎖 brand tokens，絕不丟文字選擇題。預設不開。
+- **5+1 維度專家評審**（`skills/shared/critique.md`）：概念一票否決（「換個產品名還成立＝模板」）＋品牌一致性／視覺層級／細節執行／功能性／創新性，輸出 Keep／Fix（三級嚴重度、含具體數值）／Quick Wins。要求時跑。
 - **可選匯出**：report/BRD/PRD 可出向量 PDF（`html2pdf.mjs`）；deck→可編輯 PPTX 工具鏈已備妥。
 
 craft 方法論與工具鏈蒸餾自 [huashu-design](https://github.com/alchaincyf/huashu-design)（alchaincyf，MIT License）。

@@ -54,7 +54,7 @@
       "id": "propose-3",
       "skill": "pm-propose",
       "prompt": "（任一份 HTML 產出後觀察）",
-      "expected": "做顏色自審（全部 hex 可溯源到 tokens）；跑 shared/scripts/verify.py 且 page errors=0；用 Read 看截圖並能回答 html-craft.md 第 9 節四題（視覺決定來自內容哪裡/密度對比/accent 位置/120% 細節）；交付訊息附驗證結果；無 playwright 時明講未驗證，不假裝",
+      "expected": "做顏色自審（全部 hex 可溯源到 tokens）；跑 shared/scripts/verify.py 且 page errors=0；用 Read 看截圖並能回答 html-craft.md 第 10 節四題（視覺決定來自內容哪裡/密度對比/accent 位置/120% 細節）；交付訊息附驗證結果；無 playwright 時明講未驗證，不假裝",
       "tests": "顏色自審 + 驗證迴路 + craft 四題自檢 + 誠實降級"
     },
     {
@@ -75,22 +75,29 @@
       "id": "prototype-1",
       "skill": "pm-prototype",
       "prompt": "用 pm-prototype 做一個 7 個畫面的「創作者收益後台」prototype",
-      "expected": "Step 1 先對畫面清單；畫面 ≥5 → 建議平鋪 overview 形態並跟對方確認；收益後台屬高密度型 → 每屏 ≥3 處有內容的差異化資訊（收益數字、趨勢、分成狀態等），示意值明確標注不假裝真數據",
-      "tests": "呈現形態路由 + 密度分型 + 誠實示意值"
+      "expected": "Step 1 先對畫面清單；預設 demo 級 → 平鋪抓最主要的 4-6 個主屏（其餘由屏內導航到達），每台是可交互的迷你狀態機；收益後台屬高密度型 → 每屏 ≥3 處有內容的差異化資訊（收益數字、趨勢、分成狀態等），示意值明確標注不假裝真數據",
+      "tests": "demo 級預設形態 + 主屏取捨 + 密度分型 + 誠實示意值"
     },
     {
       "id": "prototype-2",
       "skill": "pm-prototype",
-      "prompt": "用 pm-prototype 做一個簡單的「修改暱稱」流程 prototype",
-      "expected": "克制型密度（每屏聚焦一件事，不塞裝飾）；預設 mobile 375px 逐屏點擊；產出單一自包含 HTML、不外連任何 CDN/字型；全部 hex 可溯源到 brand-tokens.css",
-      "tests": "克制型不過度設計 + 自包含鐵律 + CI 溯源"
+      "prompt": "用 pm-prototype 快速做一個「修改暱稱」流程的線框，越快越好不用漂亮",
+      "expected": "識別觸發詞走 wireframe 快速模式：簡化外框逐屏點擊、灰塊佔位；克制型密度（每屏聚焦一件事）；仍產出單一自包含 HTML、不外連任何 CDN/字型；全部 hex 可溯源到 brand-tokens.css；仍遵守 html-craft 底線（字重層次、間距數量級，不因為快就均一化）",
+      "tests": "模式路由 + 克制型不過度設計 + 自包含鐵律 + CI 溯源"
     },
     {
       "id": "prototype-3",
       "skill": "pm-prototype",
       "prompt": "（任一 prototype 產出後觀察）",
-      "expected": "跑 shared/scripts/verify.py：page errors=0、用 Read 看截圖肉眼檢查（無破版、無大片死白＋內容擠角落）；交付附驗證結果；提醒對方實際點一遍 navigate 流程；無 playwright 時明講未驗證",
-      "tests": "驗證迴路 + 構圖底線 + 誠實降級"
+      "expected": "跑 shared/scripts/verify.py：page errors=0、用 Read 看截圖肉眼檢查（無破版、無大片死白＋內容擠角落）；demo 級加跑 3 項最小點擊測試（navigate/modal/toggle，點擊後 pageerror=0 且截圖確認狀態變了）；交付附驗證結果；無 playwright 時明講未驗證並提醒對方親手點一遍",
+      "tests": "驗證迴路 + 點擊測試 + 構圖底線 + 誠實降級"
+    },
+    {
+      "id": "prototype-5",
+      "skill": "pm-prototype",
+      "prompt": "（觀察任一 demo 級 prototype 的 HTML 原始碼）",
+      "expected": "手機外框用 shared/assets/phone-frame.html 的 .pf-* 樣式與骨架，沒有手寫 Dynamic Island/status bar/home indicator；交互用 vanilla JS 狀態機（data-nav/data-modal/data-toggle 事件委派），沒有引入 React/Babel CDN；可點元素有 cursor:pointer + hover 回饋；圖片若有一律 base64 內嵌且過真圖誠實性測試（裝飾圖不放）",
+      "tests": "設備框硬綁定 + vanilla 自包含 + 交互真實性 + 真圖紀律"
     },
     {
       "id": "prototype-4",
@@ -119,6 +126,27 @@
       "prompt": "（觀察導出流程）",
       "expected": "先 verify.py 驗 HTML（console 乾淨）→ render-video.js 出 MP4 → ffmpeg 抽開場/中段/收尾幀用 Read 肉眼審 → ffprobe 確認時長解析度；素材模糊或缺畫面時停下來要素材，不硬做",
       "tests": "驗證迴路（對影片）+ 素材品質門檻"
+    },
+    {
+      "id": "variations-1",
+      "skill": "shared/variations",
+      "prompt": "（cartova context）用 pm-prototype 做「創作者數據週報」，我不知道要長什麼樣子，給我幾個方向",
+      "expected": "觸發顧問模式：不丟文字選擇題問風格偏好，直接固化 spec（≥300 字）後出三版真實視覺（結構輪盤跑 date +%S 選骨架/現實參照標注參照誰/設計哲學標注用誰）；三版布局骨架互異、顏色字型全部仍鎖 brand-tokens（變的是結構/排印/母題不是配色）；三版都過 verify.py 後一次貼三張截圖讓對方選；對方選定後收斂成正式版並走完整驗證",
+      "tests": "選擇無效鐵律 + 三套邏輯差異化 + CI 鎖死 + 收斂流程"
+    },
+    {
+      "id": "variations-2",
+      "skill": "shared/variations",
+      "prompt": "（方向已明確的一般 prototype/report 請求）",
+      "expected": "不觸發三版機制，單版直接做到好——variations 預設不開（約三倍成本），只在方向模糊或對方明講要多版時進",
+      "tests": "預設關閉的成本紀律"
+    },
+    {
+      "id": "critique-1",
+      "skill": "shared/critique",
+      "prompt": "（任一 HTML 產出後）幫我評審一下這份 prototype 好不好",
+      "expected": "對著 verify.py 截圖評 5+1 維度（概念/品牌一致性/視覺層級/細節執行/功能性/創新性），每個分數指得出畫面具體位置；概念維先問「換個功能名還成立嗎」，成立則概念 ≤5 且總評封頂 6.0；輸出含 Keep/Fix（⚠️致命/⚡重要/💡優化，修復含具體數值）/Quick Wins 前 3 件；評完問「要照 Fix 修嗎」而不是自動動手改",
+      "tests": "5+1 維度 + 概念一票否決 + 可操作修復清單 + 評審不自動修改"
     },
     {
       "id": "demo-4",

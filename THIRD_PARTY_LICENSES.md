@@ -15,6 +15,10 @@ vendored unmodified or adapted, and how:
 - `skills/shared/scripts/verify.py` — adapted
 - `skills/shared/assets/animations.jsx` — adapted (one patch, noted in header)
 - `skills/shared/html-craft.md` — methodology distilled and rewritten for this project
+- `skills/shared/assets/phone-frame.html` — adapted (vanilla HTML/CSS port of `assets/ios_frame.jsx`, no React/Babel dependency)
+- `skills/shared/prototype-craft.md` — methodology distilled and rewritten (from `references/app-prototype.md`)
+- `skills/shared/variations.md` — methodology distilled and rewritten (from the fallback design-direction advisor and variations philosophy)
+- `skills/shared/critique.md` — methodology distilled and rewritten (from `references/critique-guide.md`)
 
 Original license text:
 

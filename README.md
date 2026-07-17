@@ -12,7 +12,7 @@
 |---|---|---|---|
 | **Decision assessment** | `pm-assess` | A proposal (or competing initiatives) + context pack (strategy / metrics / rubric) | Structured evaluation (impact / cost / strategic fit / risk), priority ranking, technical-option flags, one-line recommendation |
 | **Proposal doc suite** | `pm-propose` | A decided initiative + context pack | BRD → PRD in two flavors (human-readable HTML + AI-dev markdown) + a presentable HTML report — all in company CI |
-| **Prototype generator** | `pm-prototype` | A feature/flow description + brand tokens | Clickable in-browser HTML wireframe, mobile-frame first, company CI |
+| **Prototype generator** | `pm-prototype` | A feature/flow description + brand tokens | Demo-grade interactive HTML prototype — tiled main screens, every device fully clickable (navigate / modals / toggles), precise phone frame, company CI; plus a quick wireframe mode |
 | **Demo video generator** | `pm-demo` | A prototype HTML or screenshots + brand tokens | 30–60s branded MP4 demo animation (optional GIF) — more persuasive than a static prototype |
 
 The four skills are deliberately **silos**, not a pipeline — a PM's day is ad-hoc tasks on demand, not a fixed assembly line.
@@ -31,7 +31,8 @@ Click through it yourself: [`examples/cartova-member-tier-prototype.html`](examp
 pm-almighty-box/
 ├── skills/            ← ENGINE: generic logic, shared across companies
 │   ├── pm-assess/  pm-propose/  pm-prototype/  pm-demo/
-│   └── shared/        HTML craft rules + verification & export toolchain
+│   └── shared/        craft rules (HTML + demo-grade prototype), variations &
+│                      critique playbooks, phone-frame asset, verify/export toolchain
 ├── contexts/
 │   └── cartova/       ← CONTEXT PACK: one per company (demo pack included)
 ├── templates/         blank context-pack skeleton (7 files)
@@ -63,10 +64,13 @@ The moat lives in the **context pack** — especially `rubric.md`, where you wri
 
 ## Output quality gates
 
-HTML outputs pass three gates beyond strict-CI mode:
+HTML outputs pass these gates beyond strict-CI mode:
 
-- **Craft rules** (`skills/shared/html-craft.md`) — type-weight hierarchy, three orders of spatial magnitude, single-accent discipline, an anti-AI-slop blacklist, and a falsifiable four-question craft self-check. Raises the floor from "AI average" to "someone designed this".
+- **Craft rules** (`skills/shared/html-craft.md`) — type-weight hierarchy, three orders of spatial magnitude, single-accent discipline, an anti-AI-slop blacklist, taste anchors, and a falsifiable four-question craft self-check. Raises the floor from "AI average" to "someone designed this".
+- **Demo-grade prototype rules** (`skills/shared/prototype-craft.md`) — tiled main screens where every device is a vanilla mini state machine (no React/CDN, still a single self-contained file), a pixel-accurate vanilla-ported iPhone frame (`assets/phone-frame.html`), an honest-real-image test, and 3 minimal click tests before handoff.
 - **Verification loop** (`skills/shared/scripts/verify.py`) — every HTML deliverable is Playwright-rendered, screenshotted, and console-error-checked before handoff; if verification didn't run, the skill says so instead of pretending.
+- **Design-direction variations** (`skills/shared/variations.md`) — when direction is ambiguous (or on request): three parallel versions with structurally different skeletons, colors still locked to brand tokens, screenshotted side by side so you choose from real visuals — never from text descriptions. Off by default.
+- **5+1-dimension expert critique** (`skills/shared/critique.md`) — concept veto first ("would this still work under another product name? then it's a template"), plus brand consistency / hierarchy / craft / functionality / originality; outputs Keep / Fix (severity-ranked, with concrete numbers) / Quick Wins. Runs on request.
 - **Optional exports** — vector PDF (`html2pdf.mjs`) for reports/BRD/PRD; deck→editable PPTX toolchain included.
 
 Craft methodology and toolchain are distilled from [huashu-design](https://github.com/alchaincyf/huashu-design) (alchaincyf, MIT License).
