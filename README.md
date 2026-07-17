@@ -19,7 +19,7 @@ The four skills are deliberately **silos**, not a pipeline — a PM's day is ad-
 
 ## What the output looks like
 
-A `pm-prototype` run against the bundled demo context pack — *"用 pm-prototype 做一個「會員升等進度頁」的可點擊 prototype"* — produces this 4-screen clickable flow (member home → tier progress → benefits comparison → fastest-path recommendation), every color traceable to `brand-tokens.css`:
+A `pm-prototype` run against the bundled demo context pack — *"用 pm-prototype 做一個「會員升等進度頁」的可點擊 prototype"* — produces this demo-grade board: 4 tiled main screens (member home → tier progress → benefits comparison → fastest-path recommendation), **every phone independently interactive** (navigate, bottom-sheet modals, toggleable subscription items), every color traceable to `brand-tokens.css`:
 
 ![Cartova member-tier prototype, 4 screens](examples/screenshots/prototype-montage.png)
 
@@ -55,8 +55,8 @@ The moat lives in the **context pack** — especially `rubric.md`, where you wri
   presentation-ready HTML report — all in Cartova teal CI
 
 用 pm-prototype 做一個「會員升等進度頁」的可點擊 prototype
-→ single self-contained HTML, 375px mobile frame, click-through screens,
-  every hex traceable to brand-tokens.css
+→ single self-contained HTML, 4 tiled iPhone frames, each a mini state
+  machine (navigate/modal/toggle), every hex traceable to brand-tokens.css
 
 用 pm-demo 幫「會員升等進度頁」做一支 30 秒 demo 影片
 → 1920×1080 MP4: CI title card → screen-by-screen walkthrough → value close

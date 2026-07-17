@@ -1,14 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cartova — 會員升等進度頁 Prototype</title>
+<meta charset="utf-8">
+<title>Cartova — 會員升等進度頁 Prototype（demo 級）</title>
 <style>
-  /* === brand-tokens.css（contexts/cartova/）整段複製 === */
+  /* ===== brand-tokens（contexts/cartova/，虛構示範公司）整段複製 ===== */
   :root {
-    --brand-primary: #0D9488;
-    --brand-black:   #0F172A;
+    --brand-primary: #0D9488;   /* Cartova Teal */
+    --brand-black:   #0F172A;   /* Deep Slate */
     --text-main:     #1E293B;
     --text-muted:    #64748B;
     --bg-light:      #F0FDFA;
@@ -17,235 +16,366 @@
     --font-zh: 'Noto Sans TC', sans-serif;
     --font-en: 'Inter', sans-serif;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: var(--font-en), var(--font-zh), sans-serif;
-    background: var(--bg-light);
-    color: var(--text-main);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    padding: 48px 16px;
-  }
-  .proto-title { font-size: 13px; font-weight: 500; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; }
+  /* 禁用：純黑 #000000 於主視覺（設備外殼屬硬體例外）、紅色系主視覺 */
 
-  /* mobile frame */
-  .frame {
-    width: 375px; height: 720px;
-    background: var(--bg-white);
-    border: 1px solid var(--border);
-    border-radius: 28px;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(15,23,42,.10);
-    display: flex; flex-direction: column;
-    position: relative;
-  }
-  .step-tag {
-    position: absolute; top: 12px; right: 16px;
-    font-size: 12px; font-weight: 500; color: var(--bg-white); opacity: .65;
-    letter-spacing: 1px; z-index: 10;
-  }
-  .screen { display: none; flex-direction: column; height: 100%; overflow-y: auto; }
-  .screen.active { display: flex; }
+  /* ===== phone-frame（shared/assets/phone-frame.html，vanilla 移植；外殼=硬體不套 CI）===== */
+  .pf-wrapper { display:inline-block; padding:12px; background:#000; border-radius:60px;
+    box-shadow:0 0 0 2px #1f2937, 0 20px 60px rgba(0,0,0,0.3); position:relative; }
+  .pf-screen { position:relative; width:393px; height:852px; border-radius:48px; overflow:hidden;
+    background:var(--bg-white); color:var(--text-main); }
+  .pf-statusbar { position:absolute; top:0; left:0; right:0; height:54px; display:flex; align-items:center;
+    justify-content:space-between; padding:0 32px; font-size:16px; font-weight:600;
+    font-family:-apple-system,"SF Pro Text",var(--font-en),var(--font-zh); z-index:20; pointer-events:none; }
+  .pf-island { position:absolute; top:12px; left:50%; transform:translateX(-50%); width:124px; height:36px;
+    background:#000; border-radius:999px; z-index:30; }
+  .pf-status-icons { display:flex; align-items:center; gap:6px; }
+  .pf-signal { display:flex; align-items:flex-end; gap:2px; height:12px; }
+  .pf-signal span { width:3px; background:currentColor; border-radius:1px; display:block; }
+  .pf-battery { width:26px; height:12px; border:1.5px solid currentColor; border-radius:3px; padding:1px;
+    position:relative; opacity:.8; box-sizing:content-box; }
+  .pf-battery-fill { height:100%; background:currentColor; border-radius:1px; opacity:.9; }
+  .pf-battery-cap { position:absolute; top:3px; right:-3px; width:2px; height:6px; background:currentColor;
+    border-radius:0 1px 1px 0; }
+  .pf-content { position:absolute; top:0; left:0; right:0; bottom:34px; overflow:auto; }
+  .pf-home { position:absolute; bottom:10px; left:50%; transform:translateX(-50%); width:140px; height:5px;
+    background:rgba(0,0,0,0.3); border-radius:999px; z-index:10; }
 
-  /* header */
-  .app-header {
-    background: var(--brand-black); color: var(--bg-white);
-    padding: 20px 24px 16px;
-    font-size: 15px; font-weight: 700; letter-spacing: -0.3px;
-  }
-  .app-header .en { font-weight: 400; font-size: 12px; letter-spacing: 3px; color: var(--bg-white); opacity: .55; display: block; margin-bottom: 2px; text-transform: uppercase; }
+  /* ===== 版面（平鋪 4 主屏）===== */
+  body { margin:0; padding:56px 48px 72px; background:var(--bg-light);
+    font-family:var(--font-en),var(--font-zh); color:var(--text-main); }
+  .board-head { max-width:1880px; margin:0 auto 40px; }
+  .board-head .kicker { font-size:12px; font-weight:500; letter-spacing:3px; color:var(--text-muted);
+    text-transform:uppercase; }
+  .board-head h1 { margin:6px 0 4px; font-size:34px; font-weight:300; letter-spacing:-1px; color:var(--brand-black); }
+  .board-head p { margin:0; font-size:14px; color:var(--text-muted); }
+  .board { display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start; max-width:1880px; margin:0 auto; }
+  .phone-label { font-size:13px; color:var(--text-muted); margin:0 0 10px 6px; }
+  .phone-label b { color:var(--brand-black); font-weight:700; }
+  .phone-label .no { font-family:var(--font-en); letter-spacing:1px; }
 
-  .content { padding: 24px; flex: 1; }
+  /* ===== 畫面共用 ===== */
+  .screen { display:none; min-height:100%; box-sizing:border-box; }
+  .screen.active { display:flex; flex-direction:column; }
+  .step-tag { display:inline-block; font-size:11px; font-weight:500; letter-spacing:2px; color:var(--text-muted);
+    text-transform:uppercase; font-family:var(--font-en),var(--font-zh); }
+  .app-header { background:var(--brand-black); color:var(--bg-white); padding:72px 24px 22px; flex:none; }
+  .app-header .step-tag { color:color-mix(in srgb, var(--bg-white) 55%, var(--brand-black)); }
+  .app-header h2 { margin:8px 0 2px; font-size:26px; font-weight:300; letter-spacing:-0.5px; }
+  .app-header .sub { font-size:13px; color:color-mix(in srgb, var(--bg-white) 60%, var(--brand-black)); }
+  .app-body { padding:24px; }
+  .hint-ill { font-size:11px; color:var(--text-muted); margin-top:8px; }
 
-  /* member card (screen 1) */
-  .member-card {
-    background: var(--brand-black); color: var(--bg-white);
-    border-radius: 16px; padding: 24px; margin-bottom: 32px;
-  }
-  .member-card .tier-label { font-size: 12px; letter-spacing: 3px; opacity: .6; text-transform: uppercase; margin-bottom: 6px; }
-  .member-card .tier-name { font-size: 30px; font-weight: 300; letter-spacing: -1px; margin-bottom: 20px; }
-  .member-card .spend-row { display: flex; justify-content: space-between; align-items: baseline; }
-  .member-card .spend-label { font-size: 13px; opacity: .6; }
-  .member-card .spend-value { font-size: 17px; font-weight: 700; }
-  .hint-bar {
-    background: var(--bg-light);
-    border-radius: 10px; padding: 14px 16px;
-    font-size: 14px; line-height: 1.6;
-    margin-bottom: 32px;
-  }
-  .hint-bar strong { color: var(--brand-primary); font-weight: 700; }
+  button { font-family:inherit; }
+  .btn { display:block; width:100%; box-sizing:border-box; border:none; border-radius:12px; padding:16px;
+    font-size:16px; font-weight:700; cursor:pointer; min-height:48px; }
+  .btn-primary { background:var(--brand-primary); color:var(--bg-white); }
+  .btn-primary:hover { background:color-mix(in srgb, var(--brand-primary) 85%, var(--brand-black)); }
+  .btn-ghost { background:none; color:var(--text-muted); font-weight:500; margin-top:4px; }
+  .btn-ghost:hover { color:var(--text-main); }
+  .cta-dock { padding:8px 24px 20px; margin-top:auto; }
+  .link-info { background:none; border:none; padding:0; font-size:12px; color:var(--brand-primary);
+    font-weight:500; cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
 
-  .menu-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 4px; border-bottom: 1px solid var(--border);
-    font-size: 15px; font-weight: 500; color: var(--text-main);
-  }
-  .menu-item .arrow { color: var(--text-muted); font-family: var(--font-en); }
-  .menu-item.muted { color: var(--text-muted); font-weight: 400; }
+  /* 屏 1・會員中心 */
+  .member-card { background:var(--brand-black); color:var(--bg-white); border-radius:16px; padding:20px; }
+  .member-card .tier-tag { font-size:10px; letter-spacing:2px; color:color-mix(in srgb, var(--bg-white) 55%, var(--brand-black));
+    text-transform:uppercase; font-family:var(--font-en),var(--font-zh); }
+  .member-card .tier-name { font-size:22px; font-weight:700; margin:4px 0 16px; }
+  .member-card .spend-cap { font-size:12px; color:color-mix(in srgb, var(--bg-white) 60%, var(--brand-black)); }
+  .member-card .spend { font-size:30px; font-weight:300; letter-spacing:-1px; font-family:var(--font-en),var(--font-zh); }
+  .member-card .next { font-size:13px; margin-top:10px; line-height:1.6;
+    color:color-mix(in srgb, var(--bg-white) 80%, var(--brand-black)); }
+  .member-card .next b { color:var(--bg-white); }
+  .acct-list { margin-top:28px; }
+  .acct-row { display:flex; align-items:center; justify-content:space-between; width:100%; background:none;
+    border:none; border-bottom:1px solid var(--border); padding:15px 2px; font-size:15px; color:var(--text-main);
+    cursor:pointer; min-height:48px; }
+  .acct-row:hover { color:var(--brand-primary); }
+  .acct-row .chev { color:var(--text-muted); }
 
-  /* tier track (screen 2) — 120% detail */
-  .big-number { font-size: 44px; font-weight: 300; letter-spacing: -1.5px; color: var(--text-main); }
-  .big-number .accent { color: var(--brand-primary); font-weight: 700; }
-  .big-number-caption { font-size: 13px; color: var(--text-muted); margin: 6px 0 40px; }
-  .tier-track { position: relative; margin: 0 6px 8px; }
-  .tier-track .rail { height: 6px; background: var(--border); border-radius: 3px; }
-  .tier-track .fill { position: absolute; top: 0; left: 0; height: 6px; width: 47%; background: var(--brand-primary); border-radius: 3px; }
-  .tier-track .dot {
-    position: absolute; top: -5px; width: 16px; height: 16px; border-radius: 50%;
-    background: var(--bg-white); border: 2px solid var(--border); transform: translateX(-50%);
-  }
-  .tier-track .dot.passed { background: var(--brand-primary); border-color: var(--brand-primary); }
-  .tier-track .dot.me { border-color: var(--brand-primary); border-width: 4px; width: 20px; height: 20px; top: -8px; }
-  .tier-labels { display: flex; justify-content: space-between; margin: 16px 6px 4px; }
-  .tier-labels div { font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.5; }
-  .tier-labels .amt { font-family: var(--font-en); font-size: 11px; display: block; }
-  .tier-labels .current { color: var(--brand-primary); font-weight: 700; }
-  .footnote { font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-top: 36px; }
+  /* 屏 2・升等進度（120% 細節：升等導軌） */
+  .prog-hero { text-align:center; padding:8px 0 4px; }
+  .prog-hero .now { font-size:44px; font-weight:300; letter-spacing:-2px; color:var(--brand-black);
+    font-family:var(--font-en),var(--font-zh); }
+  .prog-hero .now b { color:var(--brand-primary); font-weight:300; }
+  .prog-hero .of { font-size:15px; color:var(--text-muted); }
+  .prog-hero .gap { font-size:13px; color:var(--text-main); margin-top:6px; }
+  .rail-wrap { margin:30px 6px 6px; }
+  .rail { position:relative; height:6px; border-radius:999px; background:var(--border); }
+  .rail-fill { position:absolute; left:0; top:0; bottom:0; width:70%; border-radius:999px;
+    background:linear-gradient(90deg, color-mix(in srgb, var(--brand-primary) 55%, var(--bg-white)), var(--brand-primary)); }
+  .rail-dot { position:absolute; top:50%; left:70%; width:16px; height:16px; border-radius:50%;
+    background:var(--brand-primary); border:3px solid var(--bg-white); transform:translate(-50%,-50%);
+    box-shadow:0 0 0 5px color-mix(in srgb, var(--brand-primary) 18%, var(--bg-white)); }
+  .rail-ticks { position:relative; height:38px; margin-top:14px; }
+  .tick { position:absolute; transform:translateX(-50%); text-align:center; }
+  .tick .t-name { font-size:12px; font-weight:700; color:var(--text-muted); }
+  .tick .t-amt { font-size:10px; color:var(--text-muted); font-family:var(--font-en),var(--font-zh); }
+  .tick.reached .t-name { color:var(--brand-primary); }
+  .tick.next-tier .t-name { color:var(--brand-black); }
+  .prog-note { font-size:12px; color:var(--text-muted); line-height:1.7; margin-top:36px; }
 
-  /* benefits table (screen 3) */
-  .bene-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
-  .bene-table th {
-    font-size: 12px; font-weight: 500; letter-spacing: 1px; color: var(--text-muted);
-    text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border);
-  }
-  .bene-table th.gold { color: var(--brand-primary); font-weight: 700; }
-  .bene-table td { font-size: 14px; padding: 13px 8px; border-bottom: 1px solid var(--border); line-height: 1.5; }
-  .bene-table td:first-child { color: var(--text-muted); font-size: 13px; width: 34%; }
-  .bene-table td.gold { font-weight: 700; }
+  /* 屏 3・金卡權益 */
+  .cmp-table { width:100%; border-collapse:collapse; }
+  .cmp-table th, .cmp-table td { padding:13px 10px; font-size:14px; text-align:left;
+    border-bottom:1px solid var(--border); }
+  .cmp-table th { font-size:12px; letter-spacing:1px; color:var(--text-muted); font-weight:500; }
+  .cmp-table th.gold, .cmp-table td.gold { color:var(--brand-primary); font-weight:700;
+    background:color-mix(in srgb, var(--brand-primary) 6%, var(--bg-white)); }
+  .cmp-table td:first-child { color:var(--text-muted); font-size:13px; }
 
-  /* path cards (screen 4) */
-  .path-card {
-    border: 1px solid var(--border); border-radius: 12px;
-    padding: 18px; margin-bottom: 14px;
-  }
-  .path-card.primary { border-color: var(--brand-primary); background: var(--bg-light); }
-  .path-card .path-tag { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
-  .path-card.primary .path-tag { color: var(--brand-primary); }
-  .path-card .path-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-  .path-card .path-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
-  .path-card .path-desc strong { color: var(--text-main); font-weight: 500; }
+  /* 屏 4・最快路徑 */
+  .path-card { border:1px solid var(--border); border-radius:16px; padding:18px; }
+  .path-card + .path-card { margin-top:14px; }
+  .path-card.reco { border-color:color-mix(in srgb, var(--brand-primary) 45%, var(--bg-white));
+    background:color-mix(in srgb, var(--brand-primary) 6%, var(--bg-white)); }
+  .path-tag { font-size:10px; font-weight:700; letter-spacing:1px; border-radius:999px; padding:3px 10px;
+    background:var(--brand-primary); color:var(--bg-white); }
+  .path-tag.alt { background:var(--bg-white); color:var(--text-muted); border:1px solid var(--border); }
+  .path-card h3 { margin:10px 0 6px; font-size:16px; font-weight:700; color:var(--brand-black); }
+  .path-card p { margin:0; font-size:13px; color:var(--text-main); line-height:1.7; }
+  .path-card p b.est { color:var(--brand-primary); font-family:var(--font-en),var(--font-zh); }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 4px; }
+  .chip { border:1px solid var(--border); background:var(--bg-white); border-radius:999px; padding:10px 16px;
+    font-size:14px; color:var(--text-main); cursor:pointer; min-height:44px; }
+  .chip:hover { border-color:color-mix(in srgb, var(--text-muted) 50%, var(--border)); }
+  .chip[aria-pressed="true"] { border-color:var(--brand-primary); color:var(--brand-primary); font-weight:700;
+    background:color-mix(in srgb, var(--brand-primary) 10%, var(--bg-white)); }
+  .chip[aria-pressed="true"]::before { content:"✓ "; }
 
-  /* CTA */
-  .cta-area { padding: 16px 24px 24px; border-top: 1px solid var(--border); }
-  .btn {
-    display: block; width: 100%; min-height: 48px;
-    border: none; border-radius: 12px; cursor: pointer;
-    font-family: inherit; font-size: 15px; font-weight: 700;
-    background: var(--brand-primary); color: var(--bg-white);
-  }
-  .btn.ghost { background: var(--bg-white); color: var(--text-muted); border: 1px solid var(--border); font-weight: 500; margin-top: 10px; min-height: 44px; }
-
-  .sec-label { font-size: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+  /* modal（bottom sheet） */
+  .modal { position:absolute; inset:0; display:none; z-index:25; }
+  .modal.open { display:block; }
+  .modal .scrim { position:absolute; inset:0; background:rgba(15,23,42,0.5); border:none; width:100%; cursor:pointer; }
+  .sheet { position:absolute; left:0; right:0; bottom:0; background:var(--bg-white); border-radius:20px 20px 0 0;
+    padding:24px 24px 40px; }
+  .sheet h4 { margin:0 0 10px; font-size:18px; font-weight:700; color:var(--brand-black); }
+  .sheet p { margin:0 0 12px; font-size:14px; color:var(--text-main); line-height:1.7; }
+  .sheet .fine { font-size:12px; color:var(--text-muted); }
+  .sheet .btn { margin-top:14px; }
+  .sheet-grab { width:40px; height:4px; border-radius:999px; background:var(--border); margin:0 auto 16px; }
 </style>
 </head>
 <body>
-  <div class="proto-title">Cartova · pm-prototype 產出示範 · 會員升等進度頁</div>
-  <div class="frame">
-    <div class="step-tag" id="stepTag">Step 1 / 會員中心入口</div>
 
-    <!-- Screen 1：會員中心入口 -->
-    <div class="screen active" id="s1">
-      <div class="app-header"><span class="en">Cartova</span>會員中心</div>
-      <div class="content">
-        <div class="member-card">
-          <div class="tier-label">Member Tier</div>
-          <div class="tier-name">銀卡會員</div>
-          <div class="spend-row">
-            <span class="spend-label">年度累積消費</span>
-            <span class="spend-value">NT$8,450</span>
+<header class="board-head">
+  <div class="kicker">CARTOVA・PM-PROTOTYPE 產出示範（DEMO 級）</div>
+  <h1>會員升等進度頁</h1>
+  <p>平鋪 4 主屏，<b>每一台都可以操作</b>：點按鈕換頁、開關訂閱品項、彈出規則與訂閱確認。數字皆為示意值；Cartova 為虛構示範公司。</p>
+</header>
+
+<div class="board" id="board"></div>
+
+<template id="phone-tpl">
+  <div class="pf-wrapper phone">
+    <div class="pf-screen">
+      <div class="pf-statusbar" style="color:var(--bg-white)">
+        <span>9:41</span>
+        <div class="pf-status-icons">
+          <div class="pf-signal"><span style="height:4px"></span><span style="height:6px"></span><span style="height:9px"></span><span style="height:11px"></span></div>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+            <path d="M8 11.5a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"/>
+            <path d="M3 7.5a7 7 0 0110 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+            <path d="M1 4.5a11 11 0 0114 0" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.7"/>
+          </svg>
+          <div class="pf-battery"><div class="pf-battery-fill" style="width:85%"></div><div class="pf-battery-cap"></div></div>
+        </div>
+      </div>
+      <div class="pf-island"></div>
+      <div class="pf-content">
+
+        <!-- Screen 1・會員中心入口 -->
+        <section class="screen" data-screen="home">
+          <div class="app-header">
+            <span class="step-tag">STEP 1／4・入口</span>
+            <h2>會員中心</h2>
+            <div class="sub">Cartova・家居生活選物</div>
+          </div>
+          <div class="app-body">
+            <div class="member-card">
+              <div class="tier-tag">MEMBER TIER</div>
+              <div class="tier-name">銀卡會員</div>
+              <div class="spend-cap">年度累積消費</div>
+              <div class="spend">NT$8,450</div>
+              <div class="next">再累積 <b>NT$3,550</b>，即可升等金卡、全年免運。</div>
+            </div>
+            <p class="hint-ill">＊金額為示意值</p>
+            <div class="acct-list">
+              <button class="acct-row" data-nav="progress">升等進度<span class="chev">›</span></button>
+              <button class="acct-row">訂單查詢<span class="chev">›</span></button>
+              <button class="acct-row">收藏清單<span class="chev">›</span></button>
+              <button class="acct-row">推播偏好設定<span class="chev">›</span></button>
+            </div>
+          </div>
+          <div class="cta-dock"><button class="btn btn-primary" data-nav="progress">查看升等進度</button></div>
+        </section>
+
+        <!-- Screen 2・升等進度 -->
+        <section class="screen" data-screen="progress">
+          <div class="app-header">
+            <span class="step-tag">STEP 2／4・TIER PROGRESS</span>
+            <h2>升等進度</h2>
+            <div class="sub">距離金卡，看得見的一段路</div>
+          </div>
+          <div class="app-body">
+            <div class="prog-hero">
+              <div class="now">NT$<b>8,450</b></div>
+              <div class="of">／ 12,000（金卡門檻）</div>
+              <div class="gap">還差 NT$3,550・達成率 70%</div>
+            </div>
+            <div class="rail-wrap">
+              <div class="rail">
+                <div class="rail-fill"></div>
+                <div class="rail-dot"></div>
+              </div>
+              <div class="rail-ticks">
+                <div class="tick reached" style="left:2%"><div class="t-name">銅卡</div><div class="t-amt">NT$0</div></div>
+                <div class="tick reached" style="left:37%"><div class="t-name">銀卡</div><div class="t-amt">6,000</div></div>
+                <div class="tick next-tier" style="left:70%"><div class="t-name">金卡</div><div class="t-amt">12,000</div></div>
+                <div class="tick" style="left:98%"><div class="t-name">黑卡</div><div class="t-amt">18,000</div></div>
+              </div>
+            </div>
+            <p class="prog-note">年度累積消費計算至 2026-12-31，隔年 1 月依累積金額重新定級。門檻金額為示意值。　<button class="link-info" data-modal="rule-info">累積怎麼算？</button></p>
+          </div>
+          <div class="cta-dock">
+            <button class="btn btn-primary" data-nav="benefits">金卡有什麼權益？</button>
+            <button class="btn btn-ghost" data-nav="home">返回會員中心</button>
+          </div>
+        </section>
+
+        <!-- Screen 3・金卡權益 -->
+        <section class="screen" data-screen="benefits">
+          <div class="app-header">
+            <span class="step-tag">STEP 3／4・GOLD BENEFITS</span>
+            <h2>金卡權益</h2>
+            <div class="sub">銀卡 → 金卡，差在哪</div>
+          </div>
+          <div class="app-body">
+            <table class="cmp-table">
+              <tr><th></th><th>銀卡（現在）</th><th class="gold">金卡</th></tr>
+              <tr><td>免運門檻</td><td>NT$990</td><td class="gold">全年免運</td></tr>
+              <tr><td>新品早鳥</td><td>—</td><td class="gold">提前 48 小時</td></tr>
+              <tr><td>生日禮金</td><td>NT$100</td><td class="gold">NT$300</td></tr>
+              <tr><td>專屬客服</td><td>—</td><td class="gold">優先接聽</td></tr>
+            </table>
+            <p class="hint-ill">＊權益內容為示意值，實際以分級制度定案為準</p>
+          </div>
+          <div class="cta-dock">
+            <button class="btn btn-primary" data-nav="path">看最快升等路徑</button>
+            <button class="btn btn-ghost" data-nav="progress">返回進度</button>
+          </div>
+        </section>
+
+        <!-- Screen 4・最快升等路徑 -->
+        <section class="screen" data-screen="path">
+          <div class="app-header">
+            <span class="step-tag">STEP 4／4・FASTEST PATH</span>
+            <h2>最快升等路徑</h2>
+            <div class="sub">依你的購買紀錄推薦</div>
+          </div>
+          <div class="app-body">
+            <div class="path-card reco">
+              <span class="path-tag">推薦・訂閱回購</span>
+              <h3>把常買的消耗品訂起來</h3>
+              <p>勾選你固定回購的品項改為每月自動配送，預估年底前累積 <b class="est">NT$4,200</b>（示意值）——直接跨過金卡門檻，還省下每次湊免運的麻煩。</p>
+              <div class="chips">
+                <button class="chip" data-toggle aria-pressed="true">洗手乳補充包</button>
+                <button class="chip" data-toggle aria-pressed="true">礦砂貓砂</button>
+                <button class="chip" data-toggle aria-pressed="false">洗碗機專用錠</button>
+              </div>
+            </div>
+            <div class="path-card">
+              <span class="path-tag alt">替代路徑</span>
+              <h3>收藏清單一次購足</h3>
+              <p>你的收藏清單目前有 6 件商品、合計 <b class="est">NT$3,780</b>（示意值），一次購足也可達標。</p>
+            </div>
+          </div>
+          <div class="cta-dock">
+            <button class="btn btn-primary" data-modal="subscribe-confirm">預約訂閱回購</button>
+            <button class="btn btn-ghost" data-nav="home">回到會員中心</button>
+          </div>
+        </section>
+
+        <!-- Modal・累積規則 -->
+        <div class="modal" data-modal-id="rule-info">
+          <button class="scrim" data-close aria-label="關閉"></button>
+          <div class="sheet">
+            <div class="sheet-grab"></div>
+            <h4>累積怎麼算？</h4>
+            <p>以<b>實際付款金額</b>累積（扣除折抵與退貨），訂閱回購訂單同樣計入。每年 1 月 1 日依前一年度累積金額重新定級。</p>
+            <p class="fine">＊規則為示意內容，實際以分級制度定案為準。</p>
+            <button class="btn btn-primary" data-close>知道了</button>
           </div>
         </div>
-        <div class="hint-bar">再累積 <strong>NT$3,550</strong>，即可升等金卡，全年免運。</div>
-        <div class="sec-label">我的帳戶</div>
-        <div class="menu-item muted">訂單查詢 <span class="arrow">›</span></div>
-        <div class="menu-item muted">收藏清單 <span class="arrow">›</span></div>
-        <div class="menu-item muted">推播偏好設定 <span class="arrow">›</span></div>
-      </div>
-      <div class="cta-area">
-        <button class="btn" onclick="showScreen(2)">查看升等進度</button>
-      </div>
-    </div>
 
-    <!-- Screen 2：升等進度詳情 -->
-    <div class="screen" id="s2">
-      <div class="app-header"><span class="en">Tier Progress</span>升等進度</div>
-      <div class="content">
-        <div class="big-number"><span class="accent">NT$8,450</span> <span style="font-size:20px;color:var(--text-muted);">/ 12,000</span></div>
-        <div class="big-number-caption">距離金卡還差 NT$3,550（達成率 70%）</div>
-        <div class="tier-track">
-          <div class="rail"></div>
-          <div class="fill"></div>
-          <div class="dot passed" style="left:0%"></div>
-          <div class="dot passed" style="left:33%"></div>
-          <div class="dot me" style="left:47%"></div>
-          <div class="dot" style="left:67%"></div>
-          <div class="dot" style="left:100%"></div>
+        <!-- Modal・訂閱確認 -->
+        <div class="modal" data-modal-id="subscribe-confirm">
+          <button class="scrim" data-close aria-label="關閉"></button>
+          <div class="sheet">
+            <div class="sheet-grab"></div>
+            <h4>預約已勾選品項的每月配送？</h4>
+            <p>已勾選的品項將每月自動配送、免運費，隨時可暫停。預估年底前為你累積 <b>NT$4,200</b>（示意值），跨過金卡門檻。</p>
+            <button class="btn btn-primary" data-close data-nav="progress">確認，帶我看進度</button>
+            <button class="btn btn-ghost" data-close>再想想</button>
+          </div>
         </div>
-        <div class="tier-labels">
-          <div>銅卡<span class="amt">NT$0</span></div>
-          <div class="current">銀卡<span class="amt">NT$6,000</span></div>
-          <div>金卡<span class="amt">NT$12,000</span></div>
-          <div>黑卡<span class="amt">NT$18,000</span></div>
-        </div>
-        <div class="footnote">年度累積消費計算至 2026-12-31，隔年 1 月依累積金額重新定級。<br>（門檻金額為示意值，以正式方案為準）</div>
-      </div>
-      <div class="cta-area">
-        <button class="btn" onclick="showScreen(3)">金卡有什麼權益？</button>
-        <button class="btn ghost" onclick="showScreen(1)">返回會員中心</button>
-      </div>
-    </div>
 
-    <!-- Screen 3：金卡權益對照 -->
-    <div class="screen" id="s3">
-      <div class="app-header"><span class="en">Gold Benefits</span>金卡權益</div>
-      <div class="content">
-        <div class="sec-label">銀卡 → 金卡 差在哪</div>
-        <table class="bene-table">
-          <tr><th></th><th>銀卡（現在）</th><th class="gold">金卡</th></tr>
-          <tr><td>免運門檻</td><td>NT$990</td><td class="gold">全年免運</td></tr>
-          <tr><td>新品早鳥</td><td>—</td><td class="gold">提前 48 小時</td></tr>
-          <tr><td>生日禮金</td><td>NT$100</td><td class="gold">NT$300</td></tr>
-          <tr><td>專屬客服</td><td>—</td><td class="gold">優先接聽</td></tr>
-        </table>
-        <div class="footnote">權益內容為示意值，實際以分級制度定案為準。</div>
       </div>
-      <div class="cta-area">
-        <button class="btn" onclick="showScreen(4)">看最快升等路徑</button>
-        <button class="btn ghost" onclick="showScreen(2)">返回進度</button>
-      </div>
-    </div>
-
-    <!-- Screen 4：最快升等路徑 -->
-    <div class="screen" id="s4">
-      <div class="app-header"><span class="en">Fastest Path</span>最快升等路徑</div>
-      <div class="content">
-        <div class="sec-label">依你的購買紀錄推薦</div>
-        <div class="path-card primary">
-          <div class="path-tag">推薦・訂閱回購</div>
-          <div class="path-title">把常買的消耗品訂起來</div>
-          <div class="path-desc">你固定回購的<strong>洗手乳、貓砂</strong>改為每月自動配送，預估年底前累積 <strong>NT$4,200</strong>（示意值）——直接跨過金卡門檻，還省下每次下單的運費湊單。</div>
-        </div>
-        <div class="path-card">
-          <div class="path-tag">替代路徑</div>
-          <div class="path-title">收藏清單一次購足</div>
-          <div class="path-desc">你的收藏清單目前有 6 件商品、合計 NT$3,780（示意值），一次購足也可達標。</div>
-        </div>
-      </div>
-      <div class="cta-area">
-        <button class="btn" onclick="showScreen(1)">重新開始流程</button>
-      </div>
+      <div class="pf-home"></div>
     </div>
   </div>
+</template>
 
-  <script>
-    var stepNames = { 1: 'Step 1 / 會員中心入口', 2: 'Step 2 / 升等進度詳情', 3: 'Step 3 / 金卡權益對照', 4: 'Step 4 / 最快升等路徑' };
-    function showScreen(n) {
-      document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); });
-      document.getElementById('s' + n).classList.add('active');
-      document.getElementById('stepTag').textContent = stepNames[n];
+<script>
+  var MAIN_SCREENS = [
+    { id: 'home',     label: '<span class="no">STEP 1</span>／入口 — <b>會員中心</b>' },
+    { id: 'progress', label: '<span class="no">STEP 2</span>／進度 — <b>距離金卡的導軌</b>' },
+    { id: 'benefits', label: '<span class="no">STEP 3</span>／權益 — <b>銀卡 vs 金卡</b>' },
+    { id: 'path',     label: '<span class="no">STEP 4</span>／路徑 — <b>最快升等推薦</b>' }
+  ];
+
+  var board = document.getElementById('board');
+  var tpl = document.getElementById('phone-tpl');
+
+  MAIN_SCREENS.forEach(function (s) {
+    var cell = document.createElement('div');
+    var label = document.createElement('p');
+    label.className = 'phone-label';
+    label.innerHTML = s.label;
+    cell.appendChild(label);
+    var node = tpl.content.cloneNode(true);
+    node.querySelector('.phone').dataset.initial = s.id;
+    cell.appendChild(node);
+    board.appendChild(cell);
+  });
+
+  // 每台手機一個獨立狀態機（事件委派，互不干擾）
+  document.querySelectorAll('.phone').forEach(function (phone) {
+    function show(id) {
+      phone.querySelectorAll('.screen').forEach(function (sc) {
+        sc.classList.toggle('active', sc.dataset.screen === id);
+      });
+      phone.querySelector('.pf-content').scrollTop = 0;
     }
-  </script>
+    show(phone.dataset.initial);
+
+    phone.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-nav],[data-modal],[data-toggle],[data-close]');
+      if (!t || !phone.contains(t)) return;
+      if (t.hasAttribute('data-close')) {
+        var m = t.closest('.modal');
+        if (m) m.classList.remove('open');
+      }
+      if (t.dataset.modal) {
+        var target = phone.querySelector('[data-modal-id="' + t.dataset.modal + '"]');
+        if (target) target.classList.add('open');
+      }
+      if (t.dataset.nav) show(t.dataset.nav);
+      if (t.hasAttribute('data-toggle')) {
+        t.setAttribute('aria-pressed', t.getAttribute('aria-pressed') !== 'true' ? 'true' : 'false');
+      }
+    });
+  });
+</script>
 </body>
 </html>

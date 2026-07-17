@@ -19,7 +19,7 @@
 
 ## 產出長什麼樣
 
-對內附的示範 context pack 跑一次 `pm-prototype`——「用 pm-prototype 做一個『會員升等進度頁』的可點擊 prototype」——產出這個 4 屏可點擊流程（會員中心 → 升等進度 → 權益對照 → 最快路徑推薦），每個顏色都可追溯回 `brand-tokens.css`：
+對內附的示範 context pack 跑一次 `pm-prototype`——「用 pm-prototype 做一個『會員升等進度頁』的可點擊 prototype」——產出這個 demo 級平鋪版：4 個主屏並排（會員中心 → 升等進度 → 權益對照 → 最快路徑推薦），**每一台都可獨立操作**（換頁、bottom-sheet 彈窗、訂閱品項開關），每個顏色都可追溯回 `brand-tokens.css`：
 
 ![Cartova 會員升等 prototype，4 屏](examples/screenshots/prototype-montage.png)
 
@@ -55,8 +55,8 @@ pm-almighty-box/
   全套 Cartova teal CI
 
 用 pm-prototype 做一個「會員升等進度頁」的可點擊 prototype
-→ 單一自包含 HTML、375px mobile frame、可點擊換屏、
-  每個 hex 都可追溯回 brand-tokens.css
+→ 單一自包含 HTML、4 台 iPhone 外框平鋪、每台是迷你狀態機
+  （換頁/modal/開關）、每個 hex 都可追溯回 brand-tokens.css
 
 用 pm-demo 幫「會員升等進度頁」做一支 30 秒 demo 影片
 → 1920×1080 MP4：CI title card → 逐屏 walkthrough → 收尾價值一句話
