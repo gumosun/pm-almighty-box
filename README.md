@@ -17,6 +17,14 @@
 
 The four skills are deliberately **silos**, not a pipeline — a PM's day is ad-hoc tasks on demand, not a fixed assembly line.
 
+## What the output looks like
+
+A `pm-prototype` run against the bundled demo context pack — *"用 pm-prototype 做一個「會員升等進度頁」的可點擊 prototype"* — produces this 4-screen clickable flow (member home → tier progress → benefits comparison → fastest-path recommendation), every color traceable to `brand-tokens.css`:
+
+![Cartova member-tier prototype, 4 screens](examples/screenshots/prototype-montage.png)
+
+Click through it yourself: [`examples/cartova-member-tier-prototype.html`](examples/cartova-member-tier-prototype.html) (single self-contained file — download and open in any browser).
+
 ## Architecture: engine vs. context
 
 ```

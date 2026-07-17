@@ -17,6 +17,14 @@
 
 四個 skill 刻意做成**獨立 silo**、不串成管線——PM 的日常是隨叫隨用的任務，不是固定產線。
 
+## 產出長什麼樣
+
+對內附的示範 context pack 跑一次 `pm-prototype`——「用 pm-prototype 做一個『會員升等進度頁』的可點擊 prototype」——產出這個 4 屏可點擊流程（會員中心 → 升等進度 → 權益對照 → 最快路徑推薦），每個顏色都可追溯回 `brand-tokens.css`：
+
+![Cartova 會員升等 prototype，4 屏](examples/screenshots/prototype-montage.png)
+
+自己點一遍：[`examples/cartova-member-tier-prototype.html`](examples/cartova-member-tier-prototype.html)（單一自包含檔案，下載後任何瀏覽器可開）。
+
 ## 架構：引擎與脈絡分離
 
 ```
